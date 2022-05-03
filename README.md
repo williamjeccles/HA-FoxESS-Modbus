@@ -57,7 +57,7 @@ We strongly suspect that this plugin will also work with the FoxESS AIO series a
 
 ### Energy Dashboard Values
 
-⚠️Some values won't appear until a small amount of data has passed through that value. You may need to wait 24hrs before you can setup the energy dashboard.
+⚠️Some values won't appear or will show an error until a small amount of data has passed through that value. You may need to wait 24hrs before you can setup the energy dashboard.
 
 **Electricity Grid**
 - grid_daily
