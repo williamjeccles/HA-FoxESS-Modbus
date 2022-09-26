@@ -1,10 +1,19 @@
-# v0.9
-# Add the contents of this file to your Home Assistant configuration.yaml
+# FoxESS Modbus Plugin - Configuration and Sensor Mappings
 # Source https://github.com/StealthChesnut/HA-FoxESS-Modbus
 # This file isn't a valid configuration file!
 
-#FoxESS Plugin - Modbus Configuration and Mappings
-modbus: !include modbus.yaml
+# Instructions:
+# copy the custom_components directory to your HA custom_components directory
+# Add ONE of the modbus: lines to your configuration.yaml
+# Add the sensors below to your configuration.yaml 
+#
+# USB: Edit the file to update the connection settings
+#
+# LAN: Add a new secret to your secrets file - FoxESSInverterIP: <your inverter IP>
+
+
+modbus: !include custom_components/HA-FoxESS-Modbus/modbusUSB.yaml
+modbus: !include custom_components/HA-FoxESS-Modbus/modbusLAN.yaml
 
 #Sensors turn power values into power/hour values for meters
 sensor:
@@ -50,12 +59,12 @@ sensor:
   unit_time: h
   method: left
   round: 2
-  # platform: integration
-  # name: losses_sum
-  # source: sensor.system_losses
-  # unit_time: h
-  # method: left
-  # round: 2
+- platform: integration
+  name: losses_sum
+  source: sensor.system_losses
+  unit_time: h
+  method: left
+  round: 2
 
  #Templates enable math operations against states/values to give us better data
 - platform: template
@@ -117,7 +126,7 @@ sensor:
           value_template: >
               {{ ((states('sensor.pv1_daily') | float(default=0) + states('sensor.pv2_daily') | float(default=0) ) * 1 ) | round(2) }} 
 
-     system_losses:
+    system_losses:
            friendly_name: "System Losses"
            unit_of_measurement: 'kW'
            device_class: power
@@ -127,7 +136,7 @@ sensor:
                + states('sensor.grid_consumption') | float(default=0)
                + states('sensor.battery_discharge') | float(default=0)
                - states('sensor.battery_charge') | float(default=0)
-               - states('sensor.feedin_power') | float(default=0)
+               - states('sensor.feed_in_power') | float(default=0)
                - states('sensor.load_power') | float(default=0) )) | round(2) }}
 
 # Utility Meters - Provides meters to be used with the energy dashboard and reset daily
@@ -153,6 +162,6 @@ utility_meter:
   grid_daily:
     source: sensor.grid_consumption_sum
     cycle: daily
-  # losses_daily:
-  #   source: sensor:losses_sum
-  #   cycle: daily
+  losses_daily:
+    source: sensor.losses_sum
+    cycle: daily
